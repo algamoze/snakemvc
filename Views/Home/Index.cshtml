@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Renta de autos fácil y rápida";
+}
+
+<section class="hero-section">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <span class="eyebrow"><span class="status-dot"></span> Renta express · 100% digital</span>
+            <h1>Tu próximo viaje empieza con <span class="text-gradient">el auto ideal.</span></h1>
+            <p class="hero-description">Encuentra el vehículo perfecto para tu plan. Una experiencia sencilla, precios claros y la libertad de llegar más lejos.</p>
+            <div class="hero-actions">
+                <a asp-controller="Catalogo" asp-action="Catalogo" class="btn btn-primary">Ver catálogo →</a>
+                <a href="#porque-snake" class="btn btn-ghost btn-lg">Conoce Snake</a>
+            </div>
+            <div class="hero-stats">
+                <div><strong>Fácil</strong><span>Reserva sencilla</span></div>
+                <div><strong>A tu ritmo</strong><span>Opciones para cada plan</span></div>
+                <div><strong>Sin sorpresas</strong><span>Precios por día visibles</span></div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="visual-glow"></div>
+            <div class="hero-image-frame"><img src="~/img/auto.jpg" alt="Vehículo disponible para renta" /></div>
+            <div class="floating-card floating-card-top"><span class="floating-icon">✦</span><span><strong>Tu ruta, tus reglas</strong><small>Empieza a planear hoy</small></span></div>
+            <div class="floating-card floating-card-bottom"><span class="mini-check">✓</span><span><strong>Opciones para cada viaje</strong><small>Compactos, sedanes y SUV</small></span></div>
+        </div>
+    </div>
+</section>
+
+<section class="trust-strip" aria-label="Ventajas de Snake Rent">
+    <div class="container trust-grid"><div><span>01</span><p>Elige tu vehículo</p></div><div><span>02</span><p>Indica tus días</p></div><div><span>03</span><p>Calcula tu renta</p></div><div><span>04</span><p>Prepara tu viaje</p></div></div>
+</section>
+
+<section id="porque-snake" class="why-section section-space">
+    <div class="container">
+        <div class="section-heading"><span class="eyebrow">HECHO PARA MOVERTE</span><h2>Menos vueltas. <span class="text-gradient">Más camino.</span></h2><p>En Snake Rent queremos que encontrar un auto sea una parte fácil de tu viaje, no un problema más que resolver.</p></div>
+        <div class="benefit-grid">
+            <article class="benefit-card"><div class="benefit-icon">↗</div><h3>Proceso sencillo</h3><p>Explora el catálogo, selecciona un vehículo y calcula el costo de acuerdo con los días que necesitas.</p></article>
+            <article class="benefit-card"><div class="benefit-icon">◇</div><h3>Opciones para ti</h3><p>Desde autos compactos para la ciudad hasta SUV para compartir el camino con más personas.</p></article>
+            <article class="benefit-card"><div class="benefit-icon">◎</div><h3>Precios a la vista</h3><p>Consulta la tarifa diaria de cada vehículo y revisa un estimado antes de continuar.</p></article>
+        </div>
+        <div class="cta-panel"><div><span class="eyebrow">¿LISTO PARA SALIR?</span><h2>Hay un camino esperando por ti.</h2></div><a asp-controller="Catalogo" asp-action="Catalogo" class="btn btn-snake">Ver catálogo <span aria-hidden="true">→</span></a></div>
+    </div>
+</section>

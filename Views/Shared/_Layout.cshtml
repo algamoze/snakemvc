@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <title>@ViewData["Title"] | Snake Rent</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark container">
+            <a class="navbar-brand brand d-flex align-items-center" asp-controller="Home" asp-action="Index" aria-label="Snake Rent">
+                <img src="~/img/logo.jpeg" alt="Logo" style="height: 40px; margin-right: 10px; border-radius: 5px;" />
+                <span class="brand-icon" aria-hidden="true">S</span>
+                <span>SNAKE<span class="brand-accent"> RENT</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavigation">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a></li>
+                    <!-- Enlace corregido a Catalogo -->
+                    <li class="nav-item"><a class="nav-link" asp-controller="Catalogo" asp-action="Catalogo">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                    <li class="nav-item ms-lg-2"><a class="btn btn-snake btn-sm px-3" asp-controller="Account" asp-action="Register">Registro</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <a class="brand footer-brand" asp-controller="Home" asp-action="Index"><span class="brand-icon">S</span></a>
+            <p>Muévete a tu ritmo. Tu próximo destino comienza aquí.</p>
+            <span class="copyright">&copy; @DateTime.Now.Year Snake Rent. Todos los derechos reservados.</span>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

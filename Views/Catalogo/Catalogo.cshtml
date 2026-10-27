@@ -1,0 +1,26 @@
+@model List<snakemvc.Models.Product>
+@{
+    ViewData["Title"] = "Catálogo de Vehículos";
+}
+
+<h2 class="mb-4 text-white">Flota de Vehículos en Renta</h2>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm bg-white text-dark">
+                <!-- Se carga la imagen dinámica del modelo -->
+                <img src="@Url.Content(item.ImagePath)" class="card-img-top" alt="@item.Name" style="height: 220px; object-fit: cover;">
+                
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">@item.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-primary">$@item.Price MXN / día</h6>
+                    <p class="card-text">@item.Description</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <button class="btn btn-primary w-100">Rentar ahora</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

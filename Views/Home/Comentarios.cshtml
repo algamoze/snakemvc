@@ -1,0 +1,8 @@
+@{
+    ViewData["Title"] = "Comentarios";
+}
+<section class="page-hero"><div class="container"><span class="eyebrow">QUEREMOS ESCUCHARTE</span><h1>Tu opinión <span class="text-gradient">nos mueve.</span></h1><p>Comparte tu comentario sobre la experiencia de Snake Rent.</p></div></section>
+<section class="container comments-section">
+    <div class="comments-form-card"><h2>Deja tu comentario</h2><p>Cuéntanos qué te pareció o qué te gustaría ver en Snake.</p><form id="form-comentario"><div class="mb-3"><label for="nombre" class="form-label">Nombre</label><input type="text" id="nombre" name="nombre" class="form-control" maxlength="80" required autocomplete="name" placeholder="¿Cómo te llamas?" /></div><div class="mb-3"><label for="comentario" class="form-label">Comentario</label><textarea id="comentario" name="comentario" class="form-control" rows="5" maxlength="1000" required placeholder="Escribe aquí tu opinión..."></textarea></div><button type="submit" class="btn btn-snake">Publicar comentario <span aria-hidden="true">→</span></button><p class="comments-note">Los comentarios se muestran en esta sesión del navegador; todavía no se guardan en una base de datos.</p></form></div>
+    <div class="comments-list-panel"><div class="comments-list-heading"><div><span class="eyebrow">COMUNIDAD SNAKE</span><h2>Comentarios recientes</h2></div><span id="contador-comentarios" class="catalog-count">0 comentarios</span></div><div id="listaComentarios" class="comments-list"><div class="empty-state">Aún no hay comentarios. ¡Puedes ser la primera persona en compartir su opinión!</div></div></div>
+</section>
