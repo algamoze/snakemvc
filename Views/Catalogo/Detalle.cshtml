@@ -4,96 +4,134 @@
     var v = Model.Vehiculo!;
     ViewData["Title"] = "Rentar " + v.Name;
     var mx = CultureInfo.GetCultureInfo("es-MX");
+    var inv = CultureInfo.InvariantCulture;
     var hoy = DateTime.Today.ToString("yyyy-MM-dd");
+    var fotos = new List<string> { v.ImagePath! };
+    fotos.AddRange(v.Gallery);
 }
 
 <section class="container detalle-section">
-    <a asp-action="Catalogo" class="detalle-back">← Volver al catálogo</a>
+    <nav class="breadcrumb-snake" aria-label="Ruta de navegación">
+        <a asp-controller="Home" asp-action="Index">Inicio</a><span>/</span>
+        <a asp-controller="Catalogo" asp-action="Catalogo">Catálogo</a><span>/</span>
+        <strong>@v.Name</strong>
+    </nav>
 
-    <div class="detalle-grid">
-        <div class="detalle-info">
-            <div class="detalle-image">
-                <img src="@Url.Content(v.ImagePath!)" alt="@v.Name" />
-                <span class="vehicle-type">@v.Category</span>
-            </div>
-            <h1>@v.Name</h1>
-            <p class="detalle-desc">@v.Description</p>
-            <ul class="vehicle-specs">
-                <li>@v.Passengers pasajeros</li>
-                <li>@v.Transmission</li>
-                <li>@v.Category</li>
-            </ul>
-            <div class="vehicle-price">
-                <strong>$@v.Price.ToString("N0", mx) MXN</strong>
-                <span>por día</span>
-            </div>
-        </div>
+    <form asp-action="Detalle" method="post" novalidate>
+        <input type="hidden" asp-for="ProductId" />
 
-        <div class="reserva-card">
-            <h2>Calcula tu renta</h2>
-            <form asp-action="Detalle" method="post" novalidate>
-                <input type="hidden" asp-for="ProductId" />
-
-                <div class="mb-3">
-                    <label asp-for="Nombre" class="form-label">Nombre</label>
-                    <input asp-for="Nombre" class="form-control" placeholder="¿Cómo te llamas?" autocomplete="name" />
-                    <span asp-validation-for="Nombre" class="field-error"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label">Correo electrónico</label>
-                    <input asp-for="Email" class="form-control" placeholder="tucorreo@ejemplo.com" autocomplete="email" />
-                    <span asp-validation-for="Email" class="field-error"></span>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-6 mb-3">
-                        <label asp-for="FechaInicio" class="form-label">Recogida</label>
-                        <input asp-for="FechaInicio" type="date" min="@hoy" class="form-control" />
-                        <span asp-validation-for="FechaInicio" class="field-error"></span>
+        <div class="detalle-grid">
+            <div class="detalle-main">
+                <div class="detalle-galeria">
+                    <div class="detalle-image">
+                        <img id="foto-principal" src="@Url.Content(fotos[0])" alt="@v.Name" />
+                        <span class="vehicle-type">@v.Category</span>
                     </div>
-                    <div class="col-sm-6 mb-3">
-                        <label asp-for="FechaFin" class="form-label">Devolución</label>
-                        <input asp-for="FechaFin" type="date" min="@hoy" class="form-control" />
-                        <span asp-validation-for="FechaFin" class="field-error"></span>
+                    @if (fotos.Count > 1)
+                    {
+                        <div class="miniaturas">
+                            @foreach (var f in fotos)
+                            {
+                                <button type="button" class="miniatura" data-src="@Url.Content(f)" aria-label="Ver foto">
+                                    <img src="@Url.Content(f)" alt="" />
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <h1 class="detalle-titulo">@v.Name</h1>
+                <p class="detalle-desc">@v.Description</p>
+                <ul class="vehicle-specs">
+                    <li>@v.Passengers pasajeros</li>
+                    <li>@v.Transmission</li>
+                    <li>@v.Category</li>
+                </ul>
+
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+
+                <div class="reserva-card">
+                    <h2>Tus datos y fechas</h2>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" placeholder="¿Cómo te llamas?" autocomplete="name" />
+                        <span asp-validation-for="Nombre" class="field-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Correo electrónico</label>
+                        <input asp-for="Email" class="form-control" placeholder="tucorreo@ejemplo.com" autocomplete="email" />
+                        <span asp-validation-for="Email" class="field-error"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <label asp-for="FechaInicio" class="form-label">Recogida</label>
+                            <input asp-for="FechaInicio" type="date" min="@hoy" class="form-control" />
+                            <span asp-validation-for="FechaInicio" class="field-error"></span>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label asp-for="FechaFin" class="form-label">Devolución</label>
+                            <input asp-for="FechaFin" type="date" min="@hoy" class="form-control" />
+                            <span asp-validation-for="FechaFin" class="field-error"></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="reserva-resumen" id="resumen" data-precio="@v.Price.ToString(CultureInfo.InvariantCulture)">
-                    <div><span>Días</span><strong id="resumen-dias">—</strong></div>
-                    <div><span>Total estimado</span><strong id="resumen-total">—</strong></div>
-                </div>
+                <div class="reserva-card">
+                    <h2>Extras opcionales</h2>
 
-                <button type="submit" class="btn btn-snake w-100 mt-3">Confirmar reserva <span aria-hidden="true">→</span></button>
-            </form>
+                    <label class="extra-item">
+                        <input asp-for="SillaBebe" type="checkbox" class="extra-check" data-precio="@ReservaViewModel.PrecioSilla.ToString(inv)" />
+                        <span class="extra-info"><strong>Silla para bebé</strong><small>Seguridad para los más pequeños</small></span>
+                        <span class="extra-precio">+$@ReservaViewModel.PrecioSilla.ToString("N0", mx) / día</span>
+                    </label>
+
+                    <label class="extra-item">
+                        <input asp-for="Gps" type="checkbox" class="extra-check" data-precio="@ReservaViewModel.PrecioGps.ToString(inv)" />
+                        <span class="extra-info"><strong>GPS</strong><small>Navegación en todo tu recorrido</small></span>
+                        <span class="extra-precio">+$@ReservaViewModel.PrecioGps.ToString("N0", mx) / día</span>
+                    </label>
+
+                    <label class="extra-item">
+                        <input asp-for="SeguroAmplio" type="checkbox" class="extra-check" data-precio="@ReservaViewModel.PrecioSeguro.ToString(inv)" />
+                        <span class="extra-info"><strong>Seguro amplio</strong><small>Mayor cobertura durante la renta</small></span>
+                        <span class="extra-precio">+$@ReservaViewModel.PrecioSeguro.ToString("N0", mx) / día</span>
+                    </label>
+                </div>
+            </div>
+
+            <aside class="resumen-sticky">
+                <div class="reserva-card">
+                    <span class="eyebrow">TU RESERVA</span>
+
+                    <div class="resumen-vehiculo">
+                        <img src="@Url.Content(v.ImagePath!)" alt="" />
+                        <div>
+                            <strong>@v.Name</strong>
+                            <span>$@v.Price.ToString("N0", mx) MXN / día</span>
+                        </div>
+                    </div>
+
+                    <div class="reserva-resumen" id="resumen" data-precio="@v.Price.ToString(inv)">
+                        <div><span>Días</span><strong id="r-dias">—</strong></div>
+                        <div><span>Vehículo</span><strong id="r-subtotal">—</strong></div>
+                        <div><span>Extras</span><strong id="r-extras">—</strong></div>
+                        <div class="resumen-total"><span>Total estimado</span><strong id="r-total">—</strong></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-snake w-100 mt-3" @(v.Available ? "" : "disabled")>
+                        Confirmar reserva <span aria-hidden="true">→</span>
+                    </button>
+                    <p class="summary-note">Sin cargos por ahora: esto es un estimado de tu renta.</p>
+                </div>
+            </aside>
         </div>
-    </div>
+    </form>
 </section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        (function () {
-            var inicio = document.getElementById('FechaInicio');
-            var fin = document.getElementById('FechaFin');
-            var precio = parseFloat(document.getElementById('resumen').dataset.precio);
-            var diasEl = document.getElementById('resumen-dias');
-            var totalEl = document.getElementById('resumen-total');
-
-            function calcular() {
-                var d = Math.round((new Date(fin.value) - new Date(inicio.value)) / 86400000);
-                if (isNaN(d) || d <= 0) {
-                    diasEl.textContent = '—';
-                    totalEl.textContent = '—';
-                    return;
-                }
-                diasEl.textContent = d;
-                totalEl.textContent = '$' + (d * precio).toLocaleString('es-MX') + ' MXN';
-            }
-
-            inicio.addEventListener('change', calcular);
-            fin.addEventListener('change', calcular);
-            calcular();
-        })();
-    </script>
+    <script src="~/js/reserva.js" asp-append-version="true"></script>
 }

@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Catálogo de Vehículos";
     var mx = CultureInfo.GetCultureInfo("es-MX");
+    var inv = CultureInfo.InvariantCulture;
+    var categorias = Model.Select(p => p.Category).Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
 }
 
 <section class="page-hero">
@@ -14,21 +16,51 @@
 </section>
 
 <section class="container catalog-section pb-5">
+    <div class="catalog-filters">
+        <div class="search-box">
+            <input type="search" id="buscador" class="form-control" placeholder="Buscar por nombre..." aria-label="Buscar vehículo" autocomplete="off" />
+        </div>
+        <div class="chips" role="group" aria-label="Filtrar por categoría">
+            <button type="button" class="chip active" data-categoria="todos">Todos</button>
+            @foreach (var cat in categorias)
+            {
+                <button type="button" class="chip" data-categoria="@cat">@cat</button>
+            }
+        </div>
+        <select id="orden" class="form-select filter-select" aria-label="Ordenar vehículos">
+            <option value="default">Recomendados</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="nombre">Nombre A–Z</option>
+        </select>
+    </div>
+
     <div class="catalog-toolbar">
         <div>
             <h2>Flota de vehículos en renta</h2>
             <p>Opciones para cada plan: compactos, sedanes, SUV y lujo.</p>
         </div>
-        <span class="catalog-count">@Model.Count vehículos</span>
+        <span class="catalog-count" id="contador">@Model.Count vehículos</span>
     </div>
 
     <div class="catalogo-grid">
         @foreach (var item in Model)
         {
-            <article class="vehicle-card">
-                <div class="vehicle-image">
-                    <img src="@Url.Content(item.ImagePath!)" alt="@item.Name" />
+            var estadoClase = item.Available ? "estado-ok" : "estado-no";
+            var estadoTexto = item.Available ? "Disponible" : "No disponible";
+
+            <article class="vehicle-card"
+                     data-nombre="@item.Name"
+                     data-categoria="@item.Category"
+                     data-precio="@item.Price.ToString(inv)"
+                     data-orden="@item.Id">
+                <div class="vehicle-image img-skeleton">
+                    <img src="@Url.Content(item.ImagePath!)" alt="@item.Name" loading="lazy" />
                     <span class="vehicle-type">@item.Category</span>
+                    @if (!string.IsNullOrEmpty(item.Badge))
+                    {
+                        <span class="vehicle-badge">@item.Badge</span>
+                    }
                 </div>
                 <div class="vehicle-content">
                     <div class="vehicle-title-row">
@@ -38,18 +70,34 @@
                     <ul class="vehicle-specs">
                         <li>@item.Passengers pasajeros</li>
                         <li>@item.Transmission</li>
+                        <li class="estado @estadoClase">@estadoTexto</li>
                     </ul>
                     <div class="vehicle-bottom">
                         <div class="vehicle-price">
                             <strong>$@item.Price.ToString("N0", mx)</strong>
                             <span>MXN / día</span>
                         </div>
-                        <a asp-controller="Catalogo" asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-snake btn-sm px-3">
-                            Rentar ahora <span aria-hidden="true">→</span>
-                        </a>
+                        @if (item.Available)
+                        {
+                            <a asp-controller="Catalogo" asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-snake btn-sm px-3">
+                                Rentar ahora <span aria-hidden="true">→</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="btn btn-ghost btn-sm px-3 disabled" aria-disabled="true">No disponible</span>
+                        }
                     </div>
                 </div>
             </article>
         }
     </div>
+
+    <p class="empty-state mt-3" id="sin-resultados" hidden>
+        No encontramos vehículos con esos filtros. Prueba con otra búsqueda o categoría.
+    </p>
 </section>
+
+@section Scripts {
+    <script src="~/js/catalogo.js" asp-append-version="true"></script>
+}
