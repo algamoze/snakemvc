@@ -1,0 +1,99 @@
+@using System.Globalization
+@model snakemvc.Models.ReservaViewModel
+@{
+    var v = Model.Vehiculo!;
+    ViewData["Title"] = "Rentar " + v.Name;
+    var mx = CultureInfo.GetCultureInfo("es-MX");
+    var hoy = DateTime.Today.ToString("yyyy-MM-dd");
+}
+
+<section class="container detalle-section">
+    <a asp-action="Catalogo" class="detalle-back">← Volver al catálogo</a>
+
+    <div class="detalle-grid">
+        <div class="detalle-info">
+            <div class="detalle-image">
+                <img src="@Url.Content(v.ImagePath!)" alt="@v.Name" />
+                <span class="vehicle-type">@v.Category</span>
+            </div>
+            <h1>@v.Name</h1>
+            <p class="detalle-desc">@v.Description</p>
+            <ul class="vehicle-specs">
+                <li>@v.Passengers pasajeros</li>
+                <li>@v.Transmission</li>
+                <li>@v.Category</li>
+            </ul>
+            <div class="vehicle-price">
+                <strong>$@v.Price.ToString("N0", mx) MXN</strong>
+                <span>por día</span>
+            </div>
+        </div>
+
+        <div class="reserva-card">
+            <h2>Calcula tu renta</h2>
+            <form asp-action="Detalle" method="post" novalidate>
+                <input type="hidden" asp-for="ProductId" />
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" placeholder="¿Cómo te llamas?" autocomplete="name" />
+                    <span asp-validation-for="Nombre" class="field-error"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Correo electrónico</label>
+                    <input asp-for="Email" class="form-control" placeholder="tucorreo@ejemplo.com" autocomplete="email" />
+                    <span asp-validation-for="Email" class="field-error"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <label asp-for="FechaInicio" class="form-label">Recogida</label>
+                        <input asp-for="FechaInicio" type="date" min="@hoy" class="form-control" />
+                        <span asp-validation-for="FechaInicio" class="field-error"></span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label asp-for="FechaFin" class="form-label">Devolución</label>
+                        <input asp-for="FechaFin" type="date" min="@hoy" class="form-control" />
+                        <span asp-validation-for="FechaFin" class="field-error"></span>
+                    </div>
+                </div>
+
+                <div class="reserva-resumen" id="resumen" data-precio="@v.Price.ToString(CultureInfo.InvariantCulture)">
+                    <div><span>Días</span><strong id="resumen-dias">—</strong></div>
+                    <div><span>Total estimado</span><strong id="resumen-total">—</strong></div>
+                </div>
+
+                <button type="submit" class="btn btn-snake w-100 mt-3">Confirmar reserva <span aria-hidden="true">→</span></button>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            var inicio = document.getElementById('FechaInicio');
+            var fin = document.getElementById('FechaFin');
+            var precio = parseFloat(document.getElementById('resumen').dataset.precio);
+            var diasEl = document.getElementById('resumen-dias');
+            var totalEl = document.getElementById('resumen-total');
+
+            function calcular() {
+                var d = Math.round((new Date(fin.value) - new Date(inicio.value)) / 86400000);
+                if (isNaN(d) || d <= 0) {
+                    diasEl.textContent = '—';
+                    totalEl.textContent = '—';
+                    return;
+                }
+                diasEl.textContent = d;
+                totalEl.textContent = '$' + (d * precio).toLocaleString('es-MX') + ' MXN';
+            }
+
+            inicio.addEventListener('change', calcular);
+            fin.addEventListener('change', calcular);
+            calcular();
+        })();
+    </script>
+}

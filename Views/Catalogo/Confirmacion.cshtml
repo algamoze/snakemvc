@@ -1,0 +1,31 @@
+@using System.Globalization
+@model snakemvc.Models.ReservaViewModel
+@{
+    ViewData["Title"] = "Reserva confirmada";
+    var mx = CultureInfo.GetCultureInfo("es-MX");
+}
+
+<section class="container detalle-section">
+    <div class="reserva-card confirmacion-card">
+        <span class="eyebrow">¡LISTO!</span>
+        <h1>Tu reserva está <span class="text-gradient">en camino.</span></h1>
+        <p class="detalle-desc">Gracias, @Model.Nombre. Este es el resumen de tu renta:</p>
+
+        <div class="reserva-resumen resumen-lista">
+            <div><span>Vehículo</span><strong>@Model.Vehiculo!.Name</strong></div>
+            <div><span>Recogida</span><strong>@Model.FechaInicio.ToString("dd 'de' MMMM yyyy", mx)</strong></div>
+            <div><span>Devolución</span><strong>@Model.FechaFin.ToString("dd 'de' MMMM yyyy", mx)</strong></div>
+            <div><span>Días</span><strong>@Model.Dias</strong></div>
+            <div><span>Tarifa por día</span><strong>$@Model.Vehiculo.Price.ToString("N0", mx) MXN</strong></div>
+            <div><span>Total</span><strong>$@Model.Total.ToString("N0", mx) MXN</strong></div>
+            <div><span>Correo de contacto</span><strong>@Model.Email</strong></div>
+        </div>
+
+        <p class="comments-note">Por ahora la reserva no se guarda en una base de datos; es solo una confirmación en pantalla.</p>
+
+        <div class="d-flex gap-2 flex-wrap mt-3">
+            <a asp-action="Catalogo" class="btn btn-snake">Ver más autos</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-ghost">Ir al inicio</a>
+        </div>
+    </div>
+</section>

@@ -1,26 +1,55 @@
+@using System.Globalization
 @model List<snakemvc.Models.Product>
 @{
     ViewData["Title"] = "Catálogo de Vehículos";
+    var mx = CultureInfo.GetCultureInfo("es-MX");
 }
 
-<h2 class="mb-4 text-white">Flota de Vehículos en Renta</h2>
-<div class="row">
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm bg-white text-dark">
-                <!-- Se carga la imagen dinámica del modelo -->
-                <img src="@Url.Content(item.ImagePath)" class="card-img-top" alt="@item.Name" style="height: 220px; object-fit: cover;">
-                
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">@item.Name</h5>
-                    <h6 class="card-subtitle mb-2 text-primary">$@item.Price MXN / día</h6>
-                    <p class="card-text">@item.Description</p>
-                </div>
-                <div class="card-footer bg-white border-top-0">
-                    <button class="btn btn-primary w-100">Rentar ahora</button>
-                </div>
-            </div>
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow">NUESTRA FLOTA</span>
+        <h1>Elige tu <span class="text-gradient">próximo auto.</span></h1>
+        <p>Tarifas por día a la vista. Selecciona un vehículo y calcula tu renta en segundos.</p>
+    </div>
+</section>
+
+<section class="container catalog-section pb-5">
+    <div class="catalog-toolbar">
+        <div>
+            <h2>Flota de vehículos en renta</h2>
+            <p>Opciones para cada plan: compactos, sedanes, SUV y lujo.</p>
         </div>
-    }
-</div>
+        <span class="catalog-count">@Model.Count vehículos</span>
+    </div>
+
+    <div class="catalogo-grid">
+        @foreach (var item in Model)
+        {
+            <article class="vehicle-card">
+                <div class="vehicle-image">
+                    <img src="@Url.Content(item.ImagePath!)" alt="@item.Name" />
+                    <span class="vehicle-type">@item.Category</span>
+                </div>
+                <div class="vehicle-content">
+                    <div class="vehicle-title-row">
+                        <h3>@item.Name</h3>
+                    </div>
+                    <p>@item.Description</p>
+                    <ul class="vehicle-specs">
+                        <li>@item.Passengers pasajeros</li>
+                        <li>@item.Transmission</li>
+                    </ul>
+                    <div class="vehicle-bottom">
+                        <div class="vehicle-price">
+                            <strong>$@item.Price.ToString("N0", mx)</strong>
+                            <span>MXN / día</span>
+                        </div>
+                        <a asp-controller="Catalogo" asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-snake btn-sm px-3">
+                            Rentar ahora <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+</section>
